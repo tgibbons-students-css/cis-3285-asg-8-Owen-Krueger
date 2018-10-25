@@ -85,6 +85,8 @@ namespace SingleResponsibilityPrinciple
 
         private TradeRecord MapTradeDataToTradeRecord(string[] fields)
         {
+            float LotSize = 100000f;
+
             var sourceCurrencyCode = fields[0].Substring(0, 3);
             var destinationCurrencyCode = fields[0].Substring(3, 3);
             var tradeAmount = int.Parse(fields[1]);
@@ -112,8 +114,8 @@ namespace SingleResponsibilityPrinciple
             //    The @ sign allows for back slashes
             //    Watch for double quotes which must be escaped using "" 
             //    Watch for extra spaces after C: and avoid paths with - hyphens -
-            //    using (var connection = new System.Data.SqlClient.SqlConnection(@"  ;"))
-            using (var connection = new System.Data.SqlClient.SqlConnection("Data Source=(local);Initial Catalog=TradeDatabase;Integrated Security=True;"))
+            using (var connection = new System.Data.SqlClient.SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\okrueger\source\repos\cis-3285-asg-8-Owen-Krueger\tradedatabase.mdf;Integrated Security=True;Connect Timeout=30;"))
+            //using (var connection = new System.Data.SqlClient.SqlConnection("Data Source=(local);Initial Catalog=TradeDatabase;Integrated Security=True;"))
             {
                 connection.Open();
                 using (var transaction = connection.BeginTransaction())
@@ -147,6 +149,5 @@ namespace SingleResponsibilityPrinciple
             StoreTrades(trades);
         }
 
-        private static float LotSize = 100000f;
     }
 }
