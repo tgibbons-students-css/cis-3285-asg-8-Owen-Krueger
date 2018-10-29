@@ -52,8 +52,17 @@ namespace SingleResponsibilityPrinciple
         {
             if (fields.Length != 3)
             {
-                LogMessage("WARN: Line {0} malformed. Only {1} field(s) found.", currentLine, fields.Length);
-                return false;
+                if (fields[0].Length == 3 && fields[1].Length == 3)
+                {
+                    fields[0] = fields[0] + fields[1];
+                    fields[1] = fields[2];
+                    fields[2] = fields[3];
+                }
+                else
+                {
+                    LogMessage("WARN: Line {0} malformed. Only {1} field(s) found.", currentLine, fields.Length);
+                    return false;
+                }
             }
 
             if (fields[0].Length != 6)
