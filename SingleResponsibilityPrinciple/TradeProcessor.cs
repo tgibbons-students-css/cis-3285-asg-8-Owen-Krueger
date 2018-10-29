@@ -58,8 +58,15 @@ namespace SingleResponsibilityPrinciple
 
             if (fields[0].Length != 6)
             {
-                LogMessage("WARN: Trade currencies on line {0} malformed: '{1}'", currentLine, fields[0]);
-                return false;
+                if (fields[0].Substring(3, 1).Equals(" "))
+                {
+                    fields[0] = fields[0].Substring(0, 3) + fields[0].Substring(4, 3);
+                }
+                else
+                {
+                    LogMessage("WARN: Trade currencies on line {0} malformed: '{1}'", currentLine, fields[0]);
+                    return false;
+                }
             }
 
             if (!int.TryParse(fields[1], out int tradeAmount))

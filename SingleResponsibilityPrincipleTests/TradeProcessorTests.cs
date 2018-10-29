@@ -105,5 +105,22 @@ namespace SingleResponsibilityPrinciple.Tests
             //Assert
             Assert.AreEqual(1, CountDbRecords() - startCount);
         }
+
+        [TestMethod()]
+        public void SpaceInTradeCurrencies()
+        {
+            //Arrange
+            List<String> tradeData = new List<String>();
+            tradeData.Add("GDB CAD,1000.1,1.51");
+            int startCount = CountDbRecords();
+            var tradeProcessor = new TradeProcessor();
+
+            //Act
+            var trades = tradeProcessor.ParseTrades(tradeData);
+            tradeProcessor.StoreTrades(trades);
+
+            //Assert
+            Assert.AreEqual(1, CountDbRecords() - startCount);
+        }
     }
 }
