@@ -11,7 +11,7 @@ namespace SingleResponsibilityPrinciple
 {
     public class TradeProcessor
     {
-        private IEnumerable<string> ReadTradeData(Stream stream)
+        public IEnumerable<string> ReadTradeData(Stream stream)
         {
             var tradeData = new List<string>();
             using (var reader = new StreamReader(stream))
@@ -25,7 +25,7 @@ namespace SingleResponsibilityPrinciple
             return tradeData;
         }
 
-        private IEnumerable<TradeRecord> ParseTrades(IEnumerable<string> tradeData)
+        public IEnumerable<TradeRecord> ParseTrades(IEnumerable<string> tradeData)
         {
             var trades = new List<TradeRecord>();
             var lineCount = 1;
@@ -62,8 +62,7 @@ namespace SingleResponsibilityPrinciple
                 return false;
             }
 
-            int tradeAmount;
-            if (!int.TryParse(fields[1], out tradeAmount))
+            if (!int.TryParse(fields[1], out int tradeAmount))
             {
                 LogMessage("WARN: Trade amount on line {0} not a valid integer: '{1}'", currentLine, fields[1]);
                 return false;
@@ -72,10 +71,16 @@ namespace SingleResponsibilityPrinciple
             decimal tradePrice;
             if (!decimal.TryParse(fields[2], out tradePrice))
             {
-                LogMessage("WARN: Trade price on line {0} not a valid decimal: '{1}'", currentLine, fields[2]);
-                return false;
+                if (decimal.TryParse(fields[2].Substring(1), out tradePrice))
+                {
+                    fields[2] = fields[2].Substring(1);
+                }
+                else
+                {
+                    LogMessage("WARN: Trade price on line {0} not a valid decimal: '{1}'", currentLine, fields[2]);
+                    return false;
+                }
             }
-
             return true;
         }
 
@@ -104,7 +109,7 @@ namespace SingleResponsibilityPrinciple
             return trade;
         }
 
-        private void StoreTrades(IEnumerable<TradeRecord> trades)
+        public void StoreTrades(IEnumerable<TradeRecord> trades)
         {
             LogMessage("INFO: Connecting to database");
             // The first connection string uses |DataDirectory| 

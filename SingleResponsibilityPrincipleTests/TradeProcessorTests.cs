@@ -53,5 +53,40 @@ namespace SingleResponsibilityPrinciple.Tests
             int count = CountDbRecords();
             Assert.AreEqual(4, count - startCount);
         }
+
+        [TestMethod()]
+        public void ProcessBadTradesTest()
+        {
+            //Arrange
+            var tradeStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SingleResponsibilityPrincipleTests.badtrades.txt");
+
+            int startCount = CountDbRecords();
+
+            var tradeProcessor = new TradeProcessor();
+
+            //Act
+            tradeProcessor.ProcessTrades(tradeStream);
+
+            //Assert
+            int count = CountDbRecords();
+            Assert.AreEqual(2, count - startCount); //Two records shouldn't insert correctly
+        }
+
+        [TestMethod()]
+        public void PriceContainsSymbolTest()
+        {
+            //Arrange
+            List<String> tradeData = new List<String>();
+            tradeData.Add("GDBCAD,1000,$1.51");
+            int startCount = CountDbRecords();
+            var tradeProcessor = new TradeProcessor();
+
+            //Act
+            var trades = tradeProcessor.ParseTrades(tradeData);
+            tradeProcessor.StoreTrades(trades);
+
+            //Assert
+            Assert.AreEqual(1, CountDbRecords() - startCount);
+        }
     }
 }

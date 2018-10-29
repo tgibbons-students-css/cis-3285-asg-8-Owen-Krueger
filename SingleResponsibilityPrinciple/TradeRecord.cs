@@ -1,6 +1,6 @@
 ﻿namespace SingleResponsibilityPrinciple
 {
-    internal class TradeRecord
+    public class TradeRecord
     {
         internal string DestinationCurrency;
         internal float Lots;
