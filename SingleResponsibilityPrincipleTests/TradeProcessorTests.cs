@@ -1,7 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting.Logging;
 using SingleResponsibilityPrinciple;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
@@ -24,7 +26,10 @@ namespace SingleResponsibilityPrinciple.Tests
                 connection.Open();
                 string myScalarQuery = "SELECT COUNT(*) FROM trade";
                 SqlCommand myCommand = new SqlCommand(myScalarQuery, connection);
-                myCommand.Connection.Open();
+                if (myCommand.Connection.State == ConnectionState.Closed)
+                {
+                    myCommand.Connection.Open();
+                }
                 int count = (int)myCommand.ExecuteScalar();
                 connection.Close();
                 return count;
@@ -37,6 +42,8 @@ namespace SingleResponsibilityPrinciple.Tests
             //Arrange
             var tradeStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("SingleResponsibilityPrincipleTests.goodtrades.txt");
 
+            int startCount = CountDbRecords();
+
             var tradeProcessor = new TradeProcessor();
 
             //Act
@@ -44,8 +51,7 @@ namespace SingleResponsibilityPrinciple.Tests
 
             //Assert
             int count = CountDbRecords();
-            Console.WriteLine(count);
-            Assert.AreEqual(count, 4);
+            Assert.AreEqual(4, count - startCount);
         }
     }
 }

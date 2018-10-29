@@ -69,8 +69,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="badtrades.txt" />
-    <Content Include="goodtrades.txt" />
+    <EmbeddedResource Include="badtrades.txt" />
+    <EmbeddedResource Include="goodtrades.txt" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
