@@ -54,6 +54,7 @@ namespace SingleResponsibilityPrinciple.Tests
             Assert.AreEqual(4, count - startCount);
         }
 
+        //Testing bad tests
         [TestMethod()]
         public void ProcessBadTradesTest()
         {
@@ -72,6 +73,7 @@ namespace SingleResponsibilityPrinciple.Tests
             Assert.AreEqual(2, count - startCount); //Two records shouldn't insert correctly
         }
 
+        //Price has symbol in front of it
         [TestMethod()]
         public void PriceContainsSymbolTest()
         {
@@ -89,6 +91,7 @@ namespace SingleResponsibilityPrinciple.Tests
             Assert.AreEqual(1, CountDbRecords() - startCount);
         }
 
+        //User has lot size in decimal instead of integer
         [TestMethod()]
         public void LotSizeIsDecimalTest()
         {
@@ -106,6 +109,7 @@ namespace SingleResponsibilityPrinciple.Tests
             Assert.AreEqual(1, CountDbRecords() - startCount);
         }
 
+        //User accidentally puts space between currencies in first field
         [TestMethod()]
         public void SpaceInTradeCurrencies()
         {
@@ -123,6 +127,7 @@ namespace SingleResponsibilityPrinciple.Tests
             Assert.AreEqual(1, CountDbRecords() - startCount);
         }
 
+        //User accidentally puts currency in first two fields instead of just in first one
         [TestMethod()]
         public void CurrenciesTwoFieldsTest()
         {

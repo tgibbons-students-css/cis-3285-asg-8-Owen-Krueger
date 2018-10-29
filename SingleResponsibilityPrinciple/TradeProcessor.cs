@@ -52,11 +52,12 @@ namespace SingleResponsibilityPrinciple
         {
             if (fields.Length != 3)
             {
+                //If user accidentally has the currencies split into two fields
                 if (fields[0].Length == 3 && fields[1].Length == 3)
                 {
-                    fields[0] = fields[0] + fields[1];
-                    fields[1] = fields[2];
-                    fields[2] = fields[3];
+                    fields[0] = fields[0] + fields[1]; //Merge first two fields
+                    fields[1] = fields[2]; //Move left one
+                    fields[2] = fields[3]; //Move left one
                 }
                 else
                 {
@@ -67,8 +68,10 @@ namespace SingleResponsibilityPrinciple
 
             if (fields[0].Length != 6)
             {
+                //If user has space in between currencies
                 if (fields[0].Substring(3, 1).Equals(" "))
                 {
+                    //Remove space from currencies
                     fields[0] = fields[0].Substring(0, 3) + fields[0].Substring(4, 3);
                 }
                 else
@@ -80,8 +83,10 @@ namespace SingleResponsibilityPrinciple
 
             if (!int.TryParse(fields[1], out int tradeAmount))
             {
+                //If lot size is a decimal
                 if (decimal.TryParse(fields[1], out decimal tradeAmountDecimal))
                 {
+                    //Round down lot size and parse to int
                     int.TryParse(Math.Floor(tradeAmountDecimal).ToString(), out tradeAmount);
                     fields[1] = Math.Floor(tradeAmountDecimal).ToString();
                 }
@@ -95,8 +100,10 @@ namespace SingleResponsibilityPrinciple
             decimal tradePrice;
             if (!decimal.TryParse(fields[2], out tradePrice))
             {
+                //If user puts symbol in front of price ($100)
                 if (decimal.TryParse(fields[2].Substring(1), out tradePrice))
                 {
+                    //Field is now all but first character
                     fields[2] = fields[2].Substring(1);
                 }
                 else
