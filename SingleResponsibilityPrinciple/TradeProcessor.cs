@@ -64,8 +64,16 @@ namespace SingleResponsibilityPrinciple
 
             if (!int.TryParse(fields[1], out int tradeAmount))
             {
-                LogMessage("WARN: Trade amount on line {0} not a valid integer: '{1}'", currentLine, fields[1]);
-                return false;
+                if (decimal.TryParse(fields[1], out decimal tradeAmountDecimal))
+                {
+                    int.TryParse(Math.Floor(tradeAmountDecimal).ToString(), out tradeAmount);
+                    fields[1] = Math.Floor(tradeAmountDecimal).ToString();
+                }
+                else
+                {
+                    LogMessage("WARN: Trade amount on line {0} not a valid integer: '{1}'", currentLine, fields[1]);
+                    return false;
+                }
             }
 
             decimal tradePrice;
