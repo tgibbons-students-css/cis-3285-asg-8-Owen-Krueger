@@ -99,10 +99,16 @@ namespace SingleResponsibilityPrinciple
             }
 
             decimal tradePrice;
-            if (!decimal.TryParse(fields[2], out tradePrice))
+            if (!decimal.TryParse(fields[2], out tradePrice) || tradePrice < 0)
             {
+                //Check if tradePrice is negative
+                if (fields[2].Substring(0,1).Equals("-"))
+                {
+                    LogMessage("WARN: Trade price on line {0} cannot be negative: '{1}'", currentLine, fields[2]);
+                    return false;
+                }
                 //If user puts symbol in front of price ($100)
-                if (decimal.TryParse(fields[2].Substring(1), out tradePrice))
+                else if (decimal.TryParse(fields[2].Substring(1), out tradePrice))
                 {
                     //Field is now all but first character
                     fields[2] = fields[2].Substring(1);

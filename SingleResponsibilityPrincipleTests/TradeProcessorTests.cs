@@ -160,5 +160,22 @@ namespace SingleResponsibilityPrinciple.Tests
             //Assert
             Assert.AreEqual(0, CountDbRecords() - startCount);
         }
+
+        [TestMethod()]
+        public void NegativePrice()
+        {
+            //Arrange
+            List<String> tradeData = new List<String>();
+            tradeData.Add("GDBCAD,1000,-1.51");
+            int startCount = CountDbRecords();
+            var tradeProcessor = new TradeProcessor();
+
+            //Act
+            var trades = tradeProcessor.ParseTrades(tradeData);
+            tradeProcessor.StoreTrades(trades);
+
+            //Assert
+            Assert.AreEqual(0, CountDbRecords() - startCount);
+        }
     }
 }
