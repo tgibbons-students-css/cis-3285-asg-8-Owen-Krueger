@@ -81,10 +81,11 @@ namespace SingleResponsibilityPrinciple
                 }
             }
 
-            if (!int.TryParse(fields[1], out int tradeAmount))
+            //Checks if value is not parse-able or if the amount is less than 0
+            if (!int.TryParse(fields[1], out int tradeAmount) || tradeAmount < 0)
             {
                 //If lot size is a decimal
-                if (decimal.TryParse(fields[1], out decimal tradeAmountDecimal))
+                if (decimal.TryParse(fields[1], out decimal tradeAmountDecimal) && tradeAmountDecimal > 0) //Also checks if value is greater than 0
                 {
                     //Round down lot size and parse to int
                     int.TryParse(Math.Floor(tradeAmountDecimal).ToString(), out tradeAmount);

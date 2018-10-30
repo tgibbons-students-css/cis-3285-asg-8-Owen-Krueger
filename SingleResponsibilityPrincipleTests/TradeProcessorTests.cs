@@ -23,13 +23,12 @@ namespace SingleResponsibilityPrinciple.Tests
         {
             using (var connection = new System.Data.SqlClient.SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\okrueger\source\repos\cis-3285-asg-8-Owen-Krueger\tradedatabase.mdf;Integrated Security=True;Connect Timeout=30;"))
             {
-                connection.Open();
+                if (connection.State == ConnectionState.Closed)
+                {
+                    connection.Open();
+                }
                 string myScalarQuery = "SELECT COUNT(*) FROM trade";
                 SqlCommand myCommand = new SqlCommand(myScalarQuery, connection);
-                if (myCommand.Connection.State == ConnectionState.Closed)
-                {
-                    myCommand.Connection.Open();
-                }
                 int count = (int)myCommand.ExecuteScalar();
                 connection.Close();
                 return count;
@@ -70,7 +69,7 @@ namespace SingleResponsibilityPrinciple.Tests
 
             //Assert
             int count = CountDbRecords();
-            Assert.AreEqual(2, count - startCount); //Two records shouldn't insert correctly
+            Assert.AreEqual(startCount, count); //Two records shouldn't insert correctly
         }
 
         //Price has symbol in front of it
@@ -143,6 +142,23 @@ namespace SingleResponsibilityPrinciple.Tests
 
             //Assert
             Assert.AreEqual(1, CountDbRecords() - startCount);
+        }
+
+        [TestMethod()]
+        public void NegativeLotNumber()
+        {
+            //Arrange
+            List<String> tradeData = new List<String>();
+            tradeData.Add("GDBCAD,-1000,1.51");
+            int startCount = CountDbRecords();
+            var tradeProcessor = new TradeProcessor();
+
+            //Act
+            var trades = tradeProcessor.ParseTrades(tradeData);
+            tradeProcessor.StoreTrades(trades);
+
+            //Assert
+            Assert.AreEqual(0, CountDbRecords() - startCount);
         }
     }
 }
